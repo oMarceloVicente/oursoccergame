@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+<project name="ourSoccerGame" default="jarfile">
+
+    <!-- Initialize build properties  -->
+    <property name="project.name" value="ourSoccerGame"/>
+    <property name="src.dir" value="src" />
+    <property name="main.class" value="org.academiadecodigo.oursoccergame.Main" />
+    <property name="build.dir" value="build" />
+    <property name="classes.dir" value="src/build/classes" />
+    <property name="lib.dir" value="lib" />
+    <property name="resources.dir" value="resources"/>
+    <property name="sound.dir" value="sound"/>
+    <property name="sound.file" value="resources/sound/generalmusic.wav"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar" />
+    </path>
+
+    <target name="resources" description="Add resources">
+        <copy todir="src/build/resources">
+            <fileset dir="${resources.dir}"/>
+        </copy>
+    </target>
+
+    <target name="sound" description="Add sound">
+        <copy todir="src/build/sound">
+            <fileset dir="resources/sound"/>
+        </copy>
+    </target>
+
+    <target name="prepare" description="Creates the build and classes directories">
+        <mkdir dir="src/build/classes" />
+        <mkdir dir="src/build/resources"/>
+        <mkdir dir="src/build/sound"/>
+    </target>
+
+    <target name="clean" description="Clean up project">
+        <delete dir="src/build" />
+    </target>
+
+    <target name="compile" description="Compiles the source code" depends="prepare">
+        <javac srcdir="${src.dir}" destdir="src/build/classes">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="jarfile" description="Archives the code" depends="compile, resources, sound">
+        <jar destfile="${build.dir}/${project.name}.jar" basedir="src/build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}" />
+                <attribute name="Class-Path" value="${lib.dir}" />
+            </manifest>
+            <fileset dir="src/build" includes="resources/**"/>
+            <fileset dir="src/build" includes="sound/**"/>
+            <zipgroupfileset dir="${lib.dir}" includes="*.jar"/>
+        </jar>
+    </target>
+
+</project>
